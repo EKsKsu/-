@@ -5,35 +5,177 @@
 <title>Digital Wellbeing</title>
 
 <style>
+* {
+    box-sizing: border-box;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
 body {
     margin: 0;
-    background: #0f1115;
-    color: white;
-    font-family: Arial, sans-serif;
+    background: #0e0f13;
+    color: #fff;
     height: 100vh;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
 }
 
-button {
-    background: #1a73e8;
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-button:hover {
-    opacity: 0.9;
-}
-
-#fullscreenBtn {
+#fullscreen {
     position: fixed;
-    top: 15px;
-    right: 15px;
+    top: 14px;
+    right: 14px;
+    background: #1a73e8;
+    border: none;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 18px;
+    font-size: 14px;
+}
+
+.screen {
+    display: none;
+    width: 100%;
+    max-width: 360px;
+    padding: 24px;
+}
+
+.active {
+    display: block;
+}
+
+input {
+    width: 100%;
+    background: #1b1c22;
+    border: none;
+    padding: 14px;
+    color: white;
+    font-size: 16px;
+    border-radius: 10px;
+    margin-top: 16px;
+}
+
+.center {
+    text-align: center;
+}
+
+.title {
+    font-size: 28px;
+    font-weight: 500;
+    margin-bottom: 12px;
+}
+
+.subtitle {
+    opacity: 0.6;
+    margin-bottom: 28px;
+}
+
+.ring {
+    width: 240px;
+    height: 240px;
+    border-radius: 50%;
+    background:
+        conic-gradient(
+            #4f8cff 0deg 150deg,
+            #ff4d4d 150deg 260deg,
+            #fbbc04 260deg 300deg,
+            #34a853 300deg 330deg,
+            #9c27b0 330deg 360deg
+        );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.inner {
+    width: 190px;
+    height: 190px;
+    background: #0e0f13;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.time {
+    font-size: 34px;
+    font-weight: 500;
+}
+
+.today {
+    opacity: 0.6;
+    margin-top: 4px;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    opacity: 0.7;
+}
+</style>
+</head>
+
+<body>
+
+<button id="fullscreen">Fullscreen</button>
+
+<div id="login" class="screen active center">
+    <input placeholder="Username">
+</div>
+
+<div id="set" class="screen center">
+    <input id="mins" type="number" placeholder="Minutes">
+</div>
+
+<div id="main" class="screen">
+    <div class="title">Digital Wellbeing</div>
+    <div class="subtitle">Your Digital Wellbeing tools</div>
+
+    <div class="ring">
+        <div class="inner">
+            <div class="time" id="timeText">0 mins</div>
+            <div class="today">TODAY</div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div>32 Unlocks</div>
+        <div>86 Notifications</div>
+    </div>
+</div>
+
+<script>
+const fsBtn = document.getElementById("fullscreen");
+fsBtn.onclick = () => {
+    document.documentElement.requestFullscreen();
+    fsBtn.style.display = "none";
+};
+
+document.querySelector("#login input").onkeydown = e => {
+    if (e.key === "Enter") {
+        login.classList.remove("active");
+        set.classList.add("active");
+    }
+};
+
+document.querySelector("#set input").onkeydown = e => {
+    if (e.key === "Enter") {
+        const m = +mins.value;
+        if (!m) return;
+        set.classList.remove("active");
+        main.classList.add("active");
+        timeText.textContent =
+            m >= 60
+                ? `${Math.floor(m/60)} hr ${m%60} min`
+                : `${m} mins`;
+    }
+};
+</script>
+
+</body>
+</html>
     z-index: 10;
 }
 
