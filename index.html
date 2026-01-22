@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Digital Wellbeing</title>
+
+<style>
+body {
+    margin: 0;
+    background: #0f1115;
+    color: white;
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+button {
+    background: #1a73e8;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+#fullscreenBtn {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    z-index: 10;
+}
+
+.container {
+    width: 320px;
+    text-align: center;
+    display: none;
+}
+
+.active {
+    display: block;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 6px;
+    border: none;
+    font-size: 16px;
+}
+
+.circle {
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    border: 12px solid #1a73e8;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 20px auto;
+}
+
+.time {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.label {
+    opacity: 0.7;
+    margin-top: 5px;
+}
+
+h1 {
+    font-size: 22px;
+    margin-bottom: 15px;
+}
+</style>
+</head>
+
+<body>
+
+<button id="fullscreenBtn">Fullscreen</button>
+
+<!-- LOGIN -->
+<div class="container active" id="login">
+    <h1>Login</h1>
+    <input type="text" placeholder="Username">
+    <button onclick="goSetup()">Continue</button>
+</div>
+
+<!-- SET TIME -->
+<div class="container" id="setup">
+    <h1>How much screen time?</h1>
+    <input id="minutesInput" type="number" placeholder="Enter minutes (e.g. 2)">
+    <button onclick="start()">Start</button>
+</div>
+
+<!-- MAIN UI -->
+<div class="container" id="main">
+    <h1>Digital Wellbeing</h1>
+
+    <div class="circle">
+        <div class="time" id="timeText">0 mins</div>
+        <div class="label">Today</div>
+    </div>
+
+    <div class="label" id="countdown"></div>
+</div>
+
+<script>
+let totalMinutes = 0;
+let remainingSeconds = 0;
+
+document.getElementById("fullscreenBtn").onclick = () => {
+    document.documentElement.requestFullscreen();
+    document.getElementById("fullscreenBtn").style.display = "none";
+};
+
+function goSetup() {
+    document.getElementById("login").classList.remove("active");
+    document.getElementById("setup").classList.add("active");
+}
+
+function start() {
+    const mins = parseInt(document.getElementById("minutesInput").value);
+    if (isNaN(mins) || mins <= 0) return alert("Enter valid minutes");
+
+    totalMinutes = mins;
+    remainingSeconds = mins * 60;
+
+    document.getElementById("setup").classList.remove("active");
+    document.getElementById("main").classList.add("active");
+
+    updateTimeText();
+    startCountdown();
+}
+
+function formatTime(mins) {
+    if (mins >= 60) {
+        const h = Math.floor(mins / 60);
+        const m = mins % 60;
+        return `${h} hr ${m} min`;
+    }
+    return `${mins} mins`;
+}
+
+function updateTimeText() {
+    document.getElementById("timeText").innerText = formatTime(totalMinutes);
+}
+
+function startCountdown() {
+    setInterval(() => {
+        if (remainingSeconds <= 0) return;
+
+        remainingSeconds--;
+        const minsLeft = Math.ceil(remainingSeconds / 60);
+        document.getElementById("countdown").innerText =
+            "Remaining: " + formatTime(minsLeft);
+    }, 1000);
+}
+</script>
+
+</body>
+</html>
